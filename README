@@ -1,0 +1,9 @@
+
+What is hdfuse5?
+----------------
+
+hdf5use is a filesystem in userspace to explore hierarchical data files 
+
+This software uses fusepy available from http://code.google.com/p/fusepy/
+It provides a simple python interface to FUSE and MacFUSE in a single file.
+fusepy is under the BSD License so I could include it for convience.
