@@ -1,9 +1,9 @@
-
 What is hdfuse5?
 ================
 
-hdf5use is a filesystem in userspace (FUSE http://fuse.sourceforge.net/)
-to explore data stored in hierarchical hdf5 files http://www.hdfgroup.org/HDF5/
+hdf5use is a filesystem in userspace (FUSE http://fuse.sourceforge.net/ or 
+MacFUSE http://code.google.com/p/macfuse/) to explore data stored in 
+hierarchical hdf5 files (see http://www.hdfgroup.org/HDF5/).
 
 All files in the directory given as the hdfuse5 root are mirrored into the 
 mountpoint with all hdf5 files being presented as a directories. HDF5 Groups 
@@ -32,88 +32,90 @@ What do I need to do?
 
 Provided the above requirements are met you can do this from within the 
 source directory:
+        
 
-	$ ls
-	exampleroot  fuse.py  fuse.pyc  hdfuse5.py  LICENSE  README
-	$ ls -l exampleroot # contains an hdf5 file
-	total 16
-	-rw-r--r-- 1 user user 14704 2011-06-17 16:55 NXtest.h5
-	$ mkdir mnt # create mountpoint
-	$ python hdfuse5.py exampleroot mnt # mount
-	$ # what's in there now? a directory!
-	$ ls -l mnt 
-	total 0
-	drwxr-xr-x 1 user user 14704 2011-06-17 16:55 NXtest.h5
-	$ # explore the structure
-	$ find mnt -ls
-	     1    0 drwxr-xr-x   2 user user     4096 Jun 17 16:55 mnt
-	     2    0 drwxr-xr-x   1 user user    14704 Jun 17 16:55 mnt/NXtest.h5
-	     3    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/entry
-	     4    0 -rw-r--r--   1 user user       10 Jun 17 16:55 mnt/NXtest.h5/entry/ch_data
-	     5    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/entry/data
-	     6    0 -rw-r--r--   1 user user     8000 Jun 17 16:55 mnt/NXtest.h5/entry/data/comp_data
-	     7    0 -rw-r--r--   1 user user       28 Jun 17 16:55 mnt/NXtest.h5/entry/data/flush_data
-	     8    0 -rw-r--r--   1 user user      160 Jun 17 16:55 mnt/NXtest.h5/entry/data/r8_data
-	     9    0 -rw-r--r--   1 user user        4 Jun 17 16:55 mnt/NXtest.h5/entry/i1_data
-	    10    0 -rw-r--r--   1 user user        8 Jun 17 16:55 mnt/NXtest.h5/entry/i2_data
-	    11    0 -rw-r--r--   1 user user       16 Jun 17 16:55 mnt/NXtest.h5/entry/i4_data
-	    12    0 -rw-r--r--   1 user user       32 Jun 17 16:55 mnt/NXtest.h5/entry/i8_data
-	    13    0 -rw-r--r--   1 user user       80 Jun 17 16:55 mnt/NXtest.h5/entry/r4_data
-	    14    0 -rw-r--r--   1 user user      160 Jun 17 16:55 mnt/NXtest.h5/entry/r8_data
-	    15    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/entry/sample
-	    16    0 -rw-r--r--   1 user user       20 Jun 17 16:55 mnt/NXtest.h5/entry/sample/ch_data
-	    17    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/link
-	    18    0 -rw-r--r--   1 user user      160 Jun 17 16:55 mnt/NXtest.h5/link/renLinkData
-	    19    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/link/renLinkGroup
-	    20    0 -rw-r--r--   1 user user       20 Jun 17 16:55 mnt/NXtest.h5/link/renLinkGroup/ch_data
-	    21    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/link/sample
-	    22    0 -rw-r--r--   1 user user       20 Jun 17 16:55 mnt/NXtest.h5/link/sample/ch_data
-	$ # find out the attributes of a dataset
-	$ getfattr -d mnt/NXtest.h5/entry/data/comp_data
-	# file: mnt/NXtest.h5/entry/data/comp_data
-	user.dtype="int32"
-	user.dtype.itemsize="4"
-	user.itemsize="4"
-	user.ndim="2"
-	user.shape="(100, 20)"
-	user.size="2000"
-	$ # explore the data (see "man od")
-	$ od -t dI -w4 -v mnt/NXtest.h5/entry/data/comp_data | head -30
-	0000000           0
-	0000004           0
-	0000010           0
-	0000014           0
-	0000020           0
-	0000024           0
-	0000030           0
-	0000034           0
-	0000040           0
-	0000044           0
-	0000050           0
-	0000054           0
-	0000060           0
-	0000064           0
-	0000070           0
-	0000074           0
-	0000100           0
-	0000104           0
-	0000110           0
-	0000114           0
-	0000120           1
-	0000124           1
-	0000130           1
-	0000134           1
-	0000140           1
-	0000144           1
-	0000150           1
-	0000154           1
-	0000160           1
-	0000164           1
-	$ grep -ar sample mnt # find some sample information
-	mnt/NXtest.h5/entry/sample/ch_data:NeXus sample
-	mnt/NXtest.h5/link/renLinkGroup/ch_data:NeXus sample
-	mnt/NXtest.h5/link/sample/ch_data:NeXus sample
-	$ 
+        $ ls
+        exampleroot  fuse.py  fuse.pyc  hdfuse5.py  LICENSE  README
+        $ ls -l exampleroot # contains an hdf5 file
+        total 16
+        -rw-r--r-- 1 user user 14704 2011-06-17 16:55 NXtest.h5
+        $ mkdir mnt # create mountpoint
+        $ python hdfuse5.py exampleroot mnt # mount
+        $ # what's in there now? a directory!
+        $ ls -l mnt 
+        total 0
+        drwxr-xr-x 1 user user 14704 2011-06-17 16:55 NXtest.h5
+        $ # explore the structure
+        $ find mnt -ls
+             1    0 drwxr-xr-x   2 user user     4096 Jun 17 16:55 mnt
+             2    0 drwxr-xr-x   1 user user    14704 Jun 17 16:55 mnt/NXtest.h5
+             3    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/entry
+             4    0 -rw-r--r--   1 user user       10 Jun 17 16:55 mnt/NXtest.h5/entry/ch_data
+             5    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/entry/data
+             6    0 -rw-r--r--   1 user user     8000 Jun 17 16:55 mnt/NXtest.h5/entry/data/comp_data
+             7    0 -rw-r--r--   1 user user       28 Jun 17 16:55 mnt/NXtest.h5/entry/data/flush_data
+             8    0 -rw-r--r--   1 user user      160 Jun 17 16:55 mnt/NXtest.h5/entry/data/r8_data
+             9    0 -rw-r--r--   1 user user        4 Jun 17 16:55 mnt/NXtest.h5/entry/i1_data
+            10    0 -rw-r--r--   1 user user        8 Jun 17 16:55 mnt/NXtest.h5/entry/i2_data
+            11    0 -rw-r--r--   1 user user       16 Jun 17 16:55 mnt/NXtest.h5/entry/i4_data
+            12    0 -rw-r--r--   1 user user       32 Jun 17 16:55 mnt/NXtest.h5/entry/i8_data
+            13    0 -rw-r--r--   1 user user       80 Jun 17 16:55 mnt/NXtest.h5/entry/r4_data
+            14    0 -rw-r--r--   1 user user      160 Jun 17 16:55 mnt/NXtest.h5/entry/r8_data
+            15    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/entry/sample
+            16    0 -rw-r--r--   1 user user       20 Jun 17 16:55 mnt/NXtest.h5/entry/sample/ch_data
+            17    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/link
+            18    0 -rw-r--r--   1 user user      160 Jun 17 16:55 mnt/NXtest.h5/link/renLinkData
+            19    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/link/renLinkGroup
+            20    0 -rw-r--r--   1 user user       20 Jun 17 16:55 mnt/NXtest.h5/link/renLinkGroup/ch_data
+            21    0 drwxr-xr-x   1 user user        0 Jun 17 16:55 mnt/NXtest.h5/link/sample
+            22    0 -rw-r--r--   1 user user       20 Jun 17 16:55 mnt/NXtest.h5/link/sample/ch_data
+        $ # find out the attributes of a dataset
+        $ getfattr -d mnt/NXtest.h5/entry/data/comp_data
+        # file: mnt/NXtest.h5/entry/data/comp_data
+        user.dtype="int32"
+        user.dtype.itemsize="4"
+        user.itemsize="4"
+        user.ndim="2"
+        user.shape="(100, 20)"
+        user.size="2000"
+        $ # explore the data (see "man od")
+        $ od -t dI -w4 -v mnt/NXtest.h5/entry/data/comp_data | head -30
+        0000000           0
+        0000004           0
+        0000010           0
+        0000014           0
+        0000020           0
+        0000024           0
+        0000030           0
+        0000034           0
+        0000040           0
+        0000044           0
+        0000050           0
+        0000054           0
+        0000060           0
+        0000064           0
+        0000070           0
+        0000074           0
+        0000100           0
+        0000104           0
+        0000110           0
+        0000114           0
+        0000120           1
+        0000124           1
+        0000130           1
+        0000134           1
+        0000140           1
+        0000144           1
+        0000150           1
+        0000154           1
+        0000160           1
+        0000164           1
+        $ grep -ar sample mnt # find some sample information
+        mnt/NXtest.h5/entry/sample/ch_data:NeXus sample
+        mnt/NXtest.h5/link/renLinkGroup/ch_data:NeXus sample
+        mnt/NXtest.h5/link/sample/ch_data:NeXus sample
+        $ 
+
 
 Random other questions
 ======================
@@ -170,5 +172,5 @@ Any other ideas? Let us know.
 
 
 
-Tobias Richter <Tobias.Richter@diamond.ac.uk>, June 2011
+Tobias Richter <Tobias.Richter@diamond.ac.uk>, June 2011  
 Diamond Light Source Ltd. UK
