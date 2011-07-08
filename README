@@ -27,6 +27,9 @@ This software uses fusepy available from http://code.google.com/p/fusepy/
 It provides a simple python interface to FUSE and MacFUSE in a single file.
 fusepy is under the BSD License so it could be included here for convience.
 
+Most distributions have a 'fuse' user group you need to be a member of in 
+order to be allowed to use fuse (and therefore hdfuse5).
+
 What do I need to do?
 =====================
 
@@ -114,7 +117,8 @@ source directory:
         mnt/NXtest.h5/entry/sample/ch_data:NeXus sample
         mnt/NXtest.h5/link/renLinkGroup/ch_data:NeXus sample
         mnt/NXtest.h5/link/sample/ch_data:NeXus sample
-        $ 
+        $ fusermount -u mnt  # get rid of the mount after you are done
+        $
 
 
 Random other questions
