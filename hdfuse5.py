@@ -127,10 +127,10 @@ class HDFuse5(Operations):
 
 		def listdir(self):
 			if self.nexushandle == None:
-				return ['.', '..'] + os.listdir(self.fullpath)
+				return ['.', '..'] + [name.encode('utf-8') for name in os.listdir(self.fullpath)]
 			else:
 				items = self.nexushandle[self.internalpath].items()
-				return ['.', '..'] + list((a[0]) for a in items)
+				return ['.', '..'] + [item[0].encode('utf-8')  for item in items]
 
 		def access(self, mode):
 			path = self.fullpath
