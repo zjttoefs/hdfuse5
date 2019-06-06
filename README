@@ -1,14 +1,14 @@
 What is hdfuse5?
 ================
 
-hdf5use is a filesystem in userspace (FUSE http://fuse.sourceforge.net/ or 
-MacFUSE http://code.google.com/p/macfuse/) to explore data stored in 
-hierarchical hdf5 files (see http://www.hdfgroup.org/HDF5/).
+hdfuse5 is a filesystem in userspace (FUSE https://github.com/libfuse/libfuse or
+MacFUSE https://osxfuse.github.io/) to explore data stored in
+hierarchical hdf5 files (see https://www.hdfgroup.org/solutions/hdf5/).
 
-All files in the directory given as the hdfuse5 root are mirrored into the 
-mountpoint with all hdf5 files being presented as a directories. HDF5 Groups 
-within the files are mapped into further directories, data arrays are files, 
-and attributes are shown as extended filesystem attributes. Non-hdf5 files 
+All files in the directory given as the hdfuse5 root are mirrored into the
+mountpoint with all hdf5 files being presented as a directories. HDF5 Groups
+within the files are mapped into further directories, data arrays are files,
+and attributes are shown as extended filesystem attributes. Non-hdf5 files
 and directories are just mirrored unchanged.
 
 The main purpose is to enable a quick access to the contents of hdf5 files
@@ -17,26 +17,26 @@ with normal system tools (grep, find, cat, file browser, etc.).
 What do I need to run hdfuse5?
 ==============================
 
- * python (http://www.python.org/) 
- * h5py (http://code.google.com/p/h5py/) 
+ * python (https://www.python.org/)
+ * h5py (https://www.h5py.org/)
  * fusepy (see below)
- * FUSE or MacFUSE support in you operating system and the required 
-   permissions to use it. That rules out any Windows variants. 
+ * FUSE or MacFUSE support in you operating system and the required
+   permissions to use it. That rules out any Windows variants.
 
-This software uses fusepy available from https://github.com/terencehonles/fusepy
+This software uses fusepy available from https://github.com/fusepy/fusepy
 It provides a simple python interface to FUSE and MacFUSE in a single file.
-fusepy is under the BSD License so it could be included here for convience.
+fusepy is under the BSD License so it could be included here for convenience.
 There have been a few updates to it since, that are not incorporated.
 
-Most distributions have a 'fuse' user group you need to be a member of in 
+Most distributions have a 'fuse' user group you need to be a member of in
 order to be allowed to use fuse (and therefore hdfuse5).
 
 What do I need to do?
 =====================
 
-Provided the above requirements are met you can do this from within the 
+Provided the above requirements are met you can do this from within the
 source directory:
-        
+
 
         $ ls
         exampleroot  fuse.py  fuse.pyc  hdfuse5.py  LICENSE  README
@@ -45,8 +45,8 @@ source directory:
         -rw-r--r-- 1 user user 14704 2011-06-17 16:55 NXtest.h5
         $ mkdir mnt # create mountpoint
         $ python hdfuse5.py exampleroot mnt # mount
-        $ # what's in there now? a directory!
-        $ ls -l mnt 
+        $ # what's in the mountpoint now? a directory for the file!
+        $ ls -l mnt
         total 0
         drwxr-xr-x 1 user user 14704 2011-06-17 16:55 NXtest.h5
         $ # explore the structure
@@ -128,10 +128,10 @@ Random other questions
 What kind of performance can I expect?
 --------------------------------------
 
-None. hdfuse5 was coded as a proof of principle. It holds no state, there 
-is no caching, no optimisations whatsoever. This left the code quite simple 
-and concise but still proved to be good enough for the main application: 
-quick inspection of the file structure of a limited number of files. 
+None. hdfuse5 was coded as a proof of principle. It holds no state, there
+is no caching, no optimisations whatsoever. This left the code quite simple
+and concise but still proved to be good enough for the main application:
+quick inspection of the file structure of a limited number of files.
 Future versions may see some optimisations if a strong enough case is made.
 Feel free to express any ideas you have.
 
@@ -140,7 +140,7 @@ Why do I have to mount a directory? Why can't I mount a single file?
 --------------------------------------------------------------------
 
 There is no reason why that could not be supported. Would be quite simple
-really. But it is not deemed as useful. The main motivation was to explore 
+really. But it is not deemed as useful. The main motivation was to explore
 multiple files easily.
 
 
@@ -149,17 +149,17 @@ Can I have write support?
 
 That's unlikely to ever be added. Setting up the data storage in hdf5 properly
 requires some knowledge or assumptions about your data. As a generic tool
-hdfuse5 cannot make any reasonable assumptions. To convey any knowlegde
-about the data a client program would need be adapted specifically to 
+hdfuse5 cannot make any reasonable assumptions. To convey any knowledge
+about the data a client program would need be adapted specifically to
 writing data through hdfuse5, and hdfuse5 would need to expose a special
-interface. In that case it would be better to use a hdf5 API in the first
-place.
+interface. In that case it would be better to use a proper hdf5 API in the
+first place.
 
 
 Any drawbacks?
 --------------
 
-hdf5 files cannot be opened "normally" by HDF5 aware tools in the tree 
+hdf5 files cannot be opened "normally" by HDF5 aware tools in the tree
 mounted via hdfuse5, because to the operating system they look like directories.
 
 
@@ -168,9 +168,9 @@ Any future plans?
 
 Links in hdf5 could be presented as symbolic link in the mounted directory.
 
-Another idea would get to present data that could be interpreted as image 
-data in the hdf5 in a format that could be read by standard image file 
-readers, e.g. tiff. This might be better done in a field specific adaption 
+Another idea would get to present data that could be interpreted as image
+data in the hdf5 in a format that could be read by standard image file
+readers, e.g. tiff. This might be better done in a field specific adaption
 though.
 
 
