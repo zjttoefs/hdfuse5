@@ -25,7 +25,7 @@ What do I need to run hdfuse5?
 
 This software uses fusepy available from https://github.com/fusepy/fusepy
 It provides a simple python interface to FUSE and MacFUSE in a single file.
-fusepy is under the BSD License so it could be included here for convenience.
+fusepy is under the ISC License so it could be included here for convenience.
 There have been a few updates to it since, that are not incorporated.
 
 Most distributions have a 'fuse' user group you need to be a member of in
@@ -132,28 +132,21 @@ None. hdfuse5 was coded as a proof of principle. It holds no state, there
 is no caching, no optimisations whatsoever. This left the code quite simple
 and concise but still proved to be good enough for the main application:
 quick inspection of the file structure of a limited number of files.
-Future versions may see some optimisations if a strong enough case is made.
-Feel free to express any ideas you have.
 
 
 Why do I have to mount a directory? Why can't I mount a single file?
 --------------------------------------------------------------------
 
-There is no reason why that could not be supported. Would be quite simple
-really. But it is not deemed as useful. The main motivation was to explore
-multiple files easily.
+This would be simple to support. The motivation at the time was to be able
+explore to multiple files easily with "grep" or similar tools.
 
 
 Can I have write support?
 -------------------------
 
-That's unlikely to ever be added. Setting up the data storage in hdf5 properly
-requires some knowledge or assumptions about your data. As a generic tool
-hdfuse5 cannot make any reasonable assumptions. To convey any knowledge
-about the data a client program would need be adapted specifically to
-writing data through hdfuse5, and hdfuse5 would need to expose a special
-interface. In that case it would be better to use a proper hdf5 API in the
-first place.
+Setting up the data storage in hdf5 properly requires some knowledge or 
+at least good assumptions about your data. As a generic tool hdfuse5 
+make any good guesses. Using h5py is not that hard.
 
 
 Any drawbacks?
@@ -167,13 +160,8 @@ Any future plans?
 -----------------
 
 Links in hdf5 could be presented as symbolic link in the mounted directory.
+Pull requests welcome.
 
 Another idea would get to present data that could be interpreted as image
 data in the hdf5 in a format that could be read by standard image file
-readers, e.g. tiff. This might be better done in a field specific adaption
-though.
-
-
-
-Tobias Richter <Tobias.Richter@diamond.ac.uk>
-Diamond Light Source Ltd. UK
+readers, e.g. as tiff. 
